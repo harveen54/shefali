@@ -111,11 +111,11 @@ public class IntAggregator implements Aggregator {
     public DbIterator iterator() {
         // some code goes here
     	List<Tuple> tupleList = new ArrayList<Tuple>();
-        TupleDesc tupleDesc = (zeroBasedIndexGroupLocal == Aggregator.NO_GROUPING)? new TupleDesc(new Type[] {Type.INT_TYPE}, new String[] {"aggregateValue"}):new TupleDesc(new Type[] {groupTypeLocal,Type.INT_TYPE}, new String[] {"groupValue","aggregateValue"});
+        TupleDesc tupleDesc = (zeroBasedIndexGroupLocal == Aggregator.NO_GROUPING)? (new TupleDesc(new Type[] {Type.INT_TYPE}, new String[] {"aggregateValue"})):(new TupleDesc(new Type[] {groupTypeLocal,Type.INT_TYPE}, new String[] {"groupValue","aggregateValue"}));
         Tuple tupleNew;
         int valueAggregateLocal;
         
-        	for(Iterator<Field> i = localGroup.keySet().iterator(); i.hasNext(); )
+        	for(Field i : localGroup.keySet() )
         {
         		valueAggregateLocal=(operatorLocal == Op.AVG)?localGroup.get(i)/localCount.get(i):localGroup.get(i);
 
@@ -125,7 +125,8 @@ public class IntAggregator implements Aggregator {
             	tupleNew.setField(0, new IntField(valueAggregateLocal));
             }
             else{
-            	tupleNew.setField(0,g);
+            	
+            	tupleNew.setField(0,i);
             	tupleNew.setField(1, new IntField(valueAggregateLocal));
             }
             tupleList.add(tupleNew);
